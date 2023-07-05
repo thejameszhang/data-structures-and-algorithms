@@ -1,0 +1,348 @@
+/**
+ * @author: James Zhang
+ * @directoryID: jzhang72
+ * @uid: 118843940\
+ * @discussionNumber: 0107
+ * I pledge on my honor that I have not given or received any unauthorized 
+ * assistance on this assignment.
+ */
+
+/**
+ * The purpose of the registrar class is to simulate a university system
+ * and support student and course tasks. The class has two instance fields: 
+ * an arraylist of all of the courses in the university registrar and an
+ * arraylist of all of the students registered at the university. Some of the
+ * actions that can be executed in this method are adding/cancelling courses 
+ * from the university registrar, checking the number of courses in the 
+ * registrar, adding/dropping students from courses, checking how mnay courses
+ * a student is taking, etc.
+ */
+
+package registrar;
+
+import java.util.ArrayList;
+
+public class Registrar {
+
+	private ArrayList<Course> courses;
+	private ArrayList<Student> allStudents;
+
+	/*
+	 * default constructor initializes courses and allStudents as empty
+	 * arraylists
+	 */
+	public Registrar() {
+		courses = new ArrayList<Course>();
+		allStudents = new ArrayList<Student>();
+	}
+
+	/**
+	 * This method is a helper method to search for a course in a registrar I
+	 * made this method as I often found myself looping through the course list
+	 * of a registrar in search for a particular course defined by its
+	 * department and number, and repeated code is problematic. This method will
+	 * return the index of the desired course in the course arraylist, and -1 if
+	 * it is not found. This method has two return statements, as the
+	 * alternative is to keep looping through the array even after finding the
+	 * course index in the registrar
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @return int the position of the desired course in the courses ArrayList
+	 */
+	private int searchCourseInRegistrar(String department, int number) {
+		for (int i = 0; i < courses.size(); i++) {
+			if ((courses.get(i)).checkCourse(department, number))
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * 1) This method adds a new course to the arraylist course for the current
+	 * object registrar as the course to be added satisfies the restraints
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @param numSeats   the number of available seats in the course
+	 * @return the current registrar object
+	 * 
+	 */
+	public Registrar addNewCourse(String department, int number, int numSeats) {
+		/*
+		 * cases where the course should NOT be added: if number or numseats is
+		 * negative, or if the course already exists in the registrar course
+		 * list
+		 */
+		if (number <= 0 || numSeats <= 0
+				|| searchCourseInRegistrar(department, number) >= 0)
+			return this;
+
+		/*
+		 * if the course passes the two tests above, then it can be added to the
+		 * arraylist
+		 */
+		courses.add(new Course(department, number, numSeats));
+		return this;
+	}
+
+	/**
+	 * 2) This method cancels a course in the course arraylist of the given
+	 * registrar if a course with that department and number exist within the
+	 * courses arraylist. It also unregisters every student that was enrolled in
+	 * that course
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @return boolean if the course was successfully removed or not
+	 */
+	public boolean cancelCourse(String department, int number) {
+		boolean cancelled = false;
+		int courseNum = searchCourseInRegistrar(department, number);
+		if (courseNum >= 0) {
+			// removes every student from the removed course by calling this
+			// helper method in the Course class
+			(courses.get(courseNum)).removeStudentsFromCourse(department,
+					number);
+
+			// actually removes the course from this registrar's course list
+			courses.remove(courseNum);
+			cancelled = true;
+		}
+		return cancelled;
+	}
+
+	/**
+	 * 3) This method returns the number of courses that currently exist in the
+	 * given Registrar
+	 * 
+	 * @param none
+	 * @return int number of active courses
+	 */
+	public int numCourses() {
+		return courses.size();
+	}
+
+	/**
+	 * This is a helper method in the addToCourse method. It finds the student
+	 * in the allStudents arraylist. If the student does not exist in the
+	 * arraylist, then this method will return -1
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @return int index of the student in the allStudents arraylist
+	 */
+	private int findStudent(String firstName, String lastName) {
+		Student student;
+		for (int i = 0; i < allStudents.size(); i++) {
+			student = allStudents.get(i);
+			if (student.checkFirstAndLastName(firstName, lastName))
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * 4) This method adds a student to the course defined by its department and
+	 * number if it passes all of the following cases: a) the course does not
+	 * exist in the registrar's course list b) the student cannot be already
+	 * enrolled in the course c) the student cannot already be enrolled in 5 or
+	 * more other courses d) there cannot be more students enrolled than the
+	 * number of seats available in the course
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @param firstName  student's first name
+	 * @param lastName   the student's last name
+	 * @return boolean if the student was successfully added to the course
+	 */
+	public boolean addToCourse(String department, int number, String firstName,
+			String lastName) {
+
+		// find the desired course
+		int courseNum = searchCourseInRegistrar(department, number);
+
+		// case a
+		if (courseNum == -1)
+			return false;
+
+		// find the desired student and course if they exist
+		Course c = courses.get(courseNum);
+		int studentNum = findStudent(firstName, lastName);
+		boolean result = false;
+
+		// in the case where the student doesn't exist
+		if (studentNum == -1) {
+			if (courses.get(courseNum).checkNumStudents()) {
+				Student newStudent = new Student(firstName, lastName);
+
+				// adds the student to this specific course's arraylist
+				c.addStudent(newStudent);
+
+				// adds the student to the registrar's allStudents arraylist
+				allStudents.add(newStudent);
+
+				// adds the course to the student's schedule
+				newStudent.addCourseToSchedule(c);
+				result = true;
+			}
+		}
+
+		// in the other case where the student does exist
+		else {
+			// if the student is already registered, more cases must be tested
+			Student s = allStudents.get(studentNum);
+			if (!s.findCourseInSchedule(department, number)
+					&& s.countNumCoursesInSchedule() < 5
+					&& c.checkNumStudents()) {
+
+				// adds the student to the course list
+				c.addStudent(s);
+
+				// adds the course to the student's schedule
+				s.addCourseToSchedule(c);
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 5) This method returns the number of students enrolled in a course
+	 * defined by its department and number
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @return int number of enrolled students
+	 */
+	public int numStudentsInCourse(String department, int number) {
+		int num = -1;
+
+		// find the course
+		int courseNum = searchCourseInRegistrar(department, number);
+		if (courseNum >= 0)
+			num = (courses.get(courseNum)).countStudentsInCourse();
+		return num;
+	}
+
+	/**
+	 * 6) This method returns the number of students with the same last name
+	 * enrolled in a course defined by its department and number. However, if
+	 * there is no course in the Registrar with that specific department and
+	 * number, then the method will return -1
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @return int number of students in the course with the desired last name
+	 */
+	public int numStudentsInCourseWithLastName(String department, int number,
+			String lastName) {
+		int num = -1;
+		int courseNum = searchCourseInRegistrar(department, number);
+		Course c = courses.get(courseNum);
+		if (courseNum >= 0)
+			num = c.countStudentsInCourseWithLastName(lastName);
+		return num;
+	}
+
+	/**
+	 * 7) This method returns true if there is a student with the specified
+	 * first and last name enrolled in the course with the specified department
+	 * and number. it returns false if no such course with that combination of
+	 * department and number exists, or if no student with both the matching
+	 * first and last name is found in the course
+	 * 
+	 * @param department the department that the course is being taught in
+	 * @param number     the course number
+	 * @param firstName  student's first name
+	 * @param lastName   the student's last name
+	 * @return boolean if the student is in the course
+	 */
+	public boolean isInCourse(String department, int number, String firstName,
+			String lastName) {
+
+		int courseNum = searchCourseInRegistrar(department, number);
+		boolean result = false;
+
+		if (courseNum >= 0) {
+			Course c = courses.get(courseNum);
+			if (c.checkStudentInCourse(firstName, lastName))
+				result = true;
+		}
+		return result;
+	}
+
+	/**
+	 * 8) This method returns the number of courses a student is taking. This
+	 * number should always be between 0 and 5. If no student with the given
+	 * first and last name exists, return 0. Note: I have two return statements
+	 * in this method because if the correct student is found in the for loop,
+	 * there is no need to keep checking the loop. I could break, but a TA said
+	 * I should just have two return statements.
+	 * 
+	 * @param firstName student's first name
+	 * @param lastName  student's last name
+	 * @return int number of courses in the student's schedules
+	 */
+	public int howManyCoursesTaking(String firstName, String lastName) {
+
+		int result = 0;
+
+		for (int i = 0; i < allStudents.size(); i++) {
+			if ((allStudents.get(i)).checkFirstAndLastName(firstName, lastName))
+				result = (allStudents.get(i)).countNumCoursesInSchedule();
+		}
+		return result;
+	}
+
+	/**
+	 * 9) This method drops a course from its student schedule. In addition, it
+	 * must also unregister the student from the course
+	 * 
+	 * @param department
+	 * @param number
+	 * @param firstName
+	 * @param lastName
+	 */
+	public boolean dropCourse(String department, int number, String firstName,
+			String lastName) {
+
+		int studentNum = findStudent(firstName, lastName);
+		int courseNum = searchCourseInRegistrar(department, number);
+		boolean result = false;
+
+		if (studentNum != -1 && courseNum != -1) {
+			Student s = allStudents.get(studentNum);
+			Course c = courses.get(courseNum);
+			if (s.removeCourseFromSchedule(department, number)
+					&& c.removeAStudentFromCourse(firstName, lastName))
+				result = true;
+		}
+		return result;
+	}
+
+	/**
+	 * 10) This method removes a student from all of the courses from their
+	 * schedule. Consequently, each course must also remove the student from its
+	 * registered list
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @return boolean if the operation is successful
+	 */
+	public boolean cancelRegistration(String firstName, String lastName) {
+
+		//
+		int studentNum = findStudent(firstName, lastName);
+		boolean result = false;
+
+		//
+		if (studentNum != -1) {
+			Student s = allStudents.get(studentNum);
+			if (s.removeAllCoursesFromSchedule())
+				result = true;
+		}
+		return result;
+
+	}
+}

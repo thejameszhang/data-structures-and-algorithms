@@ -1,0 +1,50 @@
+/**
+ * @author: James Zhang
+ * @directoryID: jzhang72
+ * @uid: 118843940
+ * @discussionNumber: 0107
+ * I pledge on my honor that I have not given or received any unauthorized 
+ * assistance on this assignment.
+ */
+
+/*
+ * Summary of the methods quiz
+ */
+
+package someRecursiveMethods;
+
+public class SomeRecursiveMethods {
+
+  public static <T> int sumEltLocations(UMCPList<T> list, T element) {
+	  
+	  // check if either parameter is null
+	  if (list == null || element == null) {
+		  throw new IllegalArgumentException();
+	  }
+	  
+	  int pos = 0
+	  
+	  if ()
+	  
+	  return 0;
+  }
+  
+  public static <T> int sumEltLocationsHelper(UMCPList<T> list, T element, int pos){
+	  
+  }
+
+  public static <T> int locOfOccurrence(UMCPList <T> list, T element,
+                                             int n) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+  public static <T> UMCPList<T> mirrorImage(UMCPList<T> list) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+  public static <T> UMCPList<T> makeList(UMCPList<T> list, int numValues,
+                                         int startPos, int n) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+}

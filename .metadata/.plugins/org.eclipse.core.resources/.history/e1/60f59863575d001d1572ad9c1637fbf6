@@ -1,0 +1,174 @@
+/**
+ * @author: James Zhang
+ * @directoryID: jzhang72
+ * @uid: 118843940
+ * @discussionNumber: 0107
+ * I pledge on my honor that I have not given or received any unauthorized 
+ * assistance on this assignment.
+ */
+
+/**
+ * This class just contains some basic recursive methods.
+ */
+
+package pbst;
+
+import java.util.Collection;
+import java.util.ArrayList;
+
+@SuppressWarnings("unchecked")
+public class NonemptyPBST<K extends Comparable<K>, V> extends PBST<K, V> {
+
+	// instance fields of the class
+	private K key;
+	private V value;
+	private PBST<K, V> left;
+	private PBST<K, V> right;
+
+	// constructor for the class
+	public NonemptyPBST(K key, V value) {
+		this.key = key;
+		this.value = value;
+		left = EmptyPBST.getInstance();
+		right = EmptyPBST.getInstance();
+	}
+
+	/**
+	 * 3.1) This method should add the specified key value pair
+	 */
+	public NonemptyPBST<K, V> addKeyValuePair(K key, V value) {
+
+		// check if argument is null
+		if (key == null || value == null)
+			throw new IllegalArgumentException("Argument cannot be null.");
+
+		int num = key.compareTo(this.key);
+
+		// if the key is less than the current key, make a recursive call on the
+		// left subtree
+		if (num < 0)
+			left = left.addKeyValuePair(key, value);
+
+		// or recursive call on the right subtree if the key is greater
+		else if (num > 0)
+			right = right.addKeyValuePair(key, value);
+
+		// in the case where there is a duplicate key, we want to replace the
+		// value of this object with the parameter specified value
+		else
+			this.value = value;
+
+		return this;
+	}
+
+	/**
+	 * 3.2) This method recursively calculates the total number of objects in
+	 * the PBST
+	 * 
+	 * @return total number of pairs
+	 */
+	public int numPairs() {
+		return 1 + left.numPairs() + right.numPairs();
+	}
+
+	/**
+	 * 3.3) This method recursively, effectively traverses the PBST until it
+	 * reaches an object with a key identical to the specified key. In this
+	 * case, the value of this object is returned.
+	 */
+	public V getValueByKey(K keyToLookUp) {
+
+		// check if argument is null
+		if (keyToLookUp == null)
+			throw new IllegalArgumentException("Argument cannot be null.");
+		int num = keyToLookUp.compareTo(key);
+
+		// base case where keys are the same
+		if (num == 0)
+			return value;
+
+		else if (num < 0)
+			return left.getValueByKey(keyToLookUp);
+
+		else
+			return right.getValueByKey(keyToLookUp);
+	}
+
+	/**
+	 * 3.4) This method recursively returns the largest key in a binary tree
+	 */
+	public K largestKey() throws EmptyPBSTException {
+		try {
+			return right.largestKey();
+		} catch (EmptyPBSTException e) {
+			return key;
+		}
+	}
+
+	/**
+	 * 3.5) This method recursively returns the smallest key in a binary tree
+	 */
+	public K smallestKey() throws EmptyPBSTException {
+		try {
+			return left.smallestKey();
+		} catch (EmptyPBSTException e) {
+			return key;
+		}
+	}
+
+	/**
+	 * 3.6)
+	 */
+	public int pathBalance(K keyToFind) {
+
+		// check if argument is null
+		if (keyToFind == null)
+			throw new IllegalArgumentException("Argument cannot be null.");
+
+		int num = keyToFind.compareTo(key);
+
+		// base case is when you've found the object with the specified key
+		if (num == 0)
+			return 0;
+
+		// if a right branch is taken, add 1 and then make the recursive call
+		else if (num > 0)
+			return 1 + right.pathBalance(keyToFind);
+
+		// if a left branch is taken, subtract 1 and then make the recursive
+		// call
+		else
+			return -1 + left.pathBalance(keyToFind);
+	}
+
+	/**
+	 * 3.7)
+	 */
+	public Collection<K> collectionOfKeys() {
+
+		// create an array list that will be returned
+		ArrayList<K> list = new ArrayList<>();
+		return list;
+
+	}
+
+	/**
+	 * 3.8)
+	 */
+	public PBST<K, V> removeKeyValuePair(K keyToRemove) {
+
+		// check if argument is null
+		if (keyToRemove == null)
+			throw new IllegalArgumentException("Argument cannot be null.");
+
+		return this;
+	}
+
+	/**
+	 * 5.1)
+	 */
+	public String toString() {
+		throw new UnsupportedOperationException("You must write this method.");
+	}
+
+}

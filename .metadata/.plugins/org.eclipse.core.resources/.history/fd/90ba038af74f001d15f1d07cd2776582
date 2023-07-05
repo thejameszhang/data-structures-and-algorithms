@@ -1,0 +1,23 @@
+package someRecursiveMethods;
+
+public class SomeRecursiveMethods {
+
+  public static <T> int sumEltLocations(UMCPList<T> list, T element) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+  public static <T> int locOfOccurrence(UMCPList <T> list, T element,
+                                             int n) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+  public static <T> UMCPList<T> mirrorImage(UMCPList<T> list) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+  public static <T> UMCPList<T> makeList(UMCPList<T> list, int numValues,
+                                         int startPos, int n) {
+    throw new UnsupportedOperationException("You must write this method.");
+  }
+
+}

@@ -1,0 +1,132 @@
+package registrar;
+import java.util.ArrayList;
+
+public class Course {
+	private String department;
+	private int number;
+	private int numSeats;
+	private ArrayList<Student> students;
+	
+	/*
+	 * constructor for the course class
+	 * initializes the department, number, numSeats, and empty students
+	 * arraylist 
+	 */
+	public Course(String department, int number, int numSeats) {
+		this.department = department;
+		this.number = number;
+		this.numSeats = numSeats;
+		students = new ArrayList<Student>();
+	}
+	
+	/**
+	 * This is a helper method in the searchCourseInRegistrar method. 
+	 * It checks if the department and number of a course match the
+	 * specified department and number
+	 * @param department
+	 * @param number
+	 * @return boolean if the course is found
+	 */
+	public boolean checkCourse(String department, int number) {
+		return ((this.department).equals(department)
+				&& (this.number) == number);
+	}
+	
+	/**
+	 * This is a helper method that unregisters student from a course.
+	 * It is used in the cancelCourse method.
+	 * @param department
+	 * @param number
+	 * @return boolean if the student is removed successfully
+	 */
+	public boolean removeAStudentFromCourse(String firstName, String lastName) {
+		for (int i = 0; i < students.size(); i++) {
+			if((students.get(i)).checkFirstAndLastName(firstName, lastName)
+					== true){
+				students.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * This is a helper method that unregisters student from a course.
+	 * It is used in the cancelCourse method.
+	 * @param department
+	 * @param number
+	 * @return void
+	 */
+	public void removeStudentsFromCourse(String department, int number) {
+		for (int i = 0; i < students.size(); i++) {
+			(students.get(i)).removeCourseFromSchedule(department, number);
+		}
+	}
+	
+	/**
+	 * This is a helper method in the addToCourse method. This method 
+	 * determines if there are available seats left in the course
+	 * @param none
+	 * @return if the number of students in the course is less than 
+	 * the number of seats in the class
+	 */
+	public boolean checkNumStudents() {
+		return (students.size() < numSeats);
+	}
+	
+	/**
+	 * This is a helper method in the addToCourse method. It adds a 
+	 * student to the course's students arraylist.
+	 */
+	public void addStudent(Student student) {
+		students.add(student);
+	}
+	
+	/**
+	 * This is a helper method in the numStudentsInCourse method. This method 
+	 * returns the number of
+	 * students in a course
+	 * @param none
+	 * @return number of students in the course
+	 */
+	public int countStudentsInCourse() {
+		return students.size();
+	}
+	
+	/**
+	 * This is a helper method in the numStudentsInCourseWithLastName method. 
+	 * Once the course is found, this method counts the number of students 
+	 * in that course with the same last name
+	 * @param lastName
+	 * @return the number of students in a course with the specified last name
+	 */
+	public int countStudentsInCourseWithLastName(String lastName) {
+		int num = 0;
+		for(int i = 0; i < students.size(); i++) {
+			if((students.get(i)).checkLastName(lastName) == true) {
+				num++;
+			}
+		}
+		return num;
+	}
+	
+	/**
+	 * This is a a helper method in the addToCourse method in the 
+	 * Registrar class. This method checks if a student
+	 * given by first name and last name is already enrolled in a course, 
+	 * which will result in them not being able to reregister into the course
+	 * @param firstName
+ 	 * @param lastName
+ 	 * @return boolean if the student is found in the course or not
+	 */
+	public boolean checkStudentInCourse(String firstName, String lastName) {
+		for(int i = 0; i < students.size(); i++) {
+			if((students.get(i)).checkFirstAndLastName(firstName, lastName) 
+					== true) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+

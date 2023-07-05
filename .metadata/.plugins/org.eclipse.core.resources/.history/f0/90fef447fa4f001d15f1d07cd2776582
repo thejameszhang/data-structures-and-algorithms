@@ -1,0 +1,74 @@
+/**
+ * @author: James Zhang
+ * @directoryID: jzhang72
+ * @uid: 118843940
+ * @discussionNumber: 0107
+ * I pledge on my honor that I have not given or received any unauthorized 
+ * assistance on this assignment.
+ */
+
+/*
+ * Summary of the methods quiz
+ */
+
+package someRecursiveMethods;
+
+public class SomeRecursiveMethods {
+
+	/**
+	 * 3.1) This method sums up all of the indexes of elements that are identical to the specified element. The list uses 1-based indexing. It calls a helper method to maintain track of the position within the list.
+	 * @param <T>
+	 * @param list
+	 * @param element
+	 * @return
+	 */
+	public static <T> int sumEltLocations(UMCPList<T> list, T element) {
+
+		// check if either parameter is null
+		if (list == null || element == null) {
+			throw new IllegalArgumentException();
+		}
+
+		return sumEltLocationsHelper(list, element, 0);
+	}
+
+	/**
+	 * 
+	 * @param <T>
+	 * @param list
+	 * @param element
+	 * @param pos
+	 * @return
+	 */
+	public static <T> int sumEltLocationsHelper(UMCPList<T> list, T element,
+			int pos) {
+
+		// base case
+		if (pos >= list.size()) {
+			return 0;
+		}
+
+		// recursive case where the element in the list is the same as he
+		// desired element, return pos + 1 and then call the helper method again
+		if (list.get(pos).equals(element)) {
+			return pos + 1 + sumEltLocationsHelper(list, element, pos + 1);
+		}
+		
+		//otherwise just call the helper method on the next element
+		return sumEltLocationsHelper(list, element, pos + 1);
+	}
+
+	public static <T> int locOfOccurrence(UMCPList<T> list, T element, int n) {
+		throw new UnsupportedOperationException("You must write this method.");
+	}
+
+	public static <T> UMCPList<T> mirrorImage(UMCPList<T> list) {
+		throw new UnsupportedOperationException("You must write this method.");
+	}
+
+	public static <T> UMCPList<T> makeList(UMCPList<T> list, int numValues,
+			int startPos, int n) {
+		throw new UnsupportedOperationException("You must write this method.");
+	}
+
+}

@@ -1,0 +1,112 @@
+package registrar;
+import java.util.ArrayList;
+
+public class Student {
+	private String firstName;
+	private String lastName;
+	private ArrayList<Course> schedule;
+	
+	/**
+	 * constructor that initializes firstName, lastName, and the student's 
+	 * schedule
+	 * @param firstName
+	 * @param lastName
+	 */
+	public Student(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		schedule = new ArrayList<Course>();
+	}
+	
+	/**
+	 * This is a helper method in the countStudentsInCourseWithLastName method. 
+	 * It checks to see if the
+	 * student's last name is the same as the specified last name
+	 * @param lastName
+	 * @return boolean if the last names match
+	 */
+	public boolean checkLastName(String lastName) {
+		return this.lastName == lastName;
+	}
+	
+	/**
+	 * This is a helper method found in the checkStudentInCourse method. 
+	 * It checks to see if a student's 
+	 * first and last name match the specified first and last name
+	 * @param firstName
+	 * @param lastName
+	 * @return if the first and last names match
+	 */
+	public boolean checkFirstAndLastName(String firstName, String lastName) {
+		return this.firstName == firstName && this.lastName == lastName;
+	}
+	
+	
+	/**
+	 * This is a helper method in the howManyCoursesTaking method. It returns 
+	 * the number of courses in a student's schedule
+	 * @param none
+	 * @return number of courses in a student's schedule
+	 */
+	public int countNumCoursesInSchedule() {
+		return schedule.size();
+	}
+	
+	/**
+	 * This is a helper method in the removeStudentsFromCourse method. It 
+	 * removes a course from a student's schedule.
+	 * @param department
+	 * @param number
+	 * @return void
+	 */
+	public boolean removeCourseFromSchedule(String department, int number) {
+		for (int i = 0; i < schedule.size(); i++) {
+			if ((schedule.get(i)).checkCourse(department, number) == true) {
+				schedule.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * This is a helper method in the removeStudentsFromCourse method. It 
+	 * removes a course from a student's schedule
+	 * @param department
+	 * @param number
+	 * @return void
+	 */
+	public boolean removeAllCoursesFromSchedule() {
+		while(schedule.size() > 0){
+			(schedule.get(0)).removeAStudentFromCourse(firstName, lastName);
+			schedule.remove(0);
+		}
+		return true;
+	}
+	
+	/**
+	 * This is a helper method in the addToCourse method. It adds the course 
+	 * to the student's schedule.
+	 * @param course
+	 * @return void
+	 */
+	public void addCourseToSchedule(Course course) {
+		schedule.add(course);
+	}
+	
+	/**
+	 * This method finds the specified course defined by its department
+	 * and number in a student's schedule
+	 * @param department
+	 * @param number
+	 * @return boolean if the course was found in the student's schedule
+	 */
+	public boolean findCourseInSchedule(String department, int number) {
+		for(int i = 0; i < schedule.size(); i++) {
+			if((schedule.get(i)).checkCourse(department, number) == true){
+				return true;
+			}
+		}
+		return false;
+	}
+}
